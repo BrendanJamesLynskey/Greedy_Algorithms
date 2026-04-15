@@ -1,0 +1,1212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Greedy Algorithms</title>
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/reveal.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/theme/black.min.css">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=DM+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+  <style>
+  :root {
+    --amber:  #f5a623;
+    --green:  #4ecb8d;
+    --purple: #a78bfa;
+    --blue:   #60a5fa;
+    --red:    #f87171;
+    --bg:     #0a0a0f;
+    --bg2:    #10101a;
+    --bg3:    #181824;
+    --border: #2a2a3a;
+    --text:   #e8e8f0;
+    --muted:  #8888a8;
+  }
+
+  .reveal-viewport { background: var(--bg); }
+  .reveal .slides section { background: transparent; }
+
+  .reveal { font-family: 'DM Sans', sans-serif; color: var(--text); }
+  .reveal h1, .reveal h2, .reveal h3 { font-family: 'Playfair Display', serif; font-weight: 700; }
+  .reveal h1 { font-size: 1.6em; color: var(--amber); line-height: 1.1; }
+  .reveal h2 { font-size: 1.1em; color: var(--amber); margin-bottom: .2em; }
+  .reveal h3 { font-size: .78em; color: var(--green); margin-bottom: .15em; }
+  .reveal p  { font-size: .56em; line-height: 1.45; color: var(--text); }
+  .reveal li { font-size: .54em; line-height: 1.45; margin-bottom: .1em; }
+  .reveal code { font-family: 'JetBrains Mono', monospace; font-size: .72em; }
+  .reveal pre  { box-shadow: none; background: var(--bg3); border: 1px solid var(--border);
+                 border-radius: 6px; padding: .3em .5em; margin: .25em 0; }
+  .reveal pre code { font-size: .52em; line-height: 1.35; background: transparent; color: #cdd6f4; }
+
+  /* ── slide chrome ── */
+  .slide-hdr {
+    display: flex; align-items: center; gap: .4em;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: .2em; margin-bottom: .3em;
+  }
+  .slide-hdr .tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: .42em; font-weight: 500;
+    color: var(--bg); background: var(--amber);
+    padding: .1em .4em; border-radius: 3px;
+    letter-spacing: .04em;
+  }
+  .slide-hdr h2 { margin: 0; font-size: .95em; }
+
+  /* ── two-column ── */
+  .cols   { display: grid; gap: .5em; }
+  .cols-2 { grid-template-columns: 1fr 1fr; }
+  .cols-3 { grid-template-columns: 1fr 1fr 1fr; }
+  .cols-6040 { grid-template-columns: 6fr 4fr; }
+  .cols-4060 { grid-template-columns: 4fr 6fr; }
+
+  /* ── cards ── */
+  .card {
+    background: var(--bg2); border: 1px solid var(--border);
+    border-radius: 6px; padding: .35em .6em;
+  }
+  .card.amber { border-left: 3px solid var(--amber); }
+  .card.green { border-left: 3px solid var(--green); }
+  .card.purple{ border-left: 3px solid var(--purple); }
+  .card.blue  { border-left: 3px solid var(--blue); }
+  .card.red   { border-left: 3px solid var(--red); }
+  .card h3 { font-size: .64em; margin: 0 0 .12em; }
+  .card p  { font-size: .52em; margin: 0; color: #b8b8d0; }
+  .card ul { margin: 0; padding-left: 1em; }
+  .card li { font-size: .52em; color: #b8b8d0; margin-bottom: .02em; }
+
+  /* ── table ── */
+  .reveal table { width: 100%; border-collapse: collapse; font-size: .5em; }
+  .reveal table th { background: var(--bg3); color: var(--amber); font-weight: 600;
+                     padding: .2em .4em; border: 1px solid var(--border); text-align: left; }
+  .reveal table td { padding: .18em .4em; border: 1px solid var(--border); color: #ccc; }
+  .reveal table tr:nth-child(even) td { background: #0e0e18; }
+
+  /* ── accent spans ── */
+  .a  { color: var(--amber); font-weight: 600; }
+  .g  { color: var(--green); font-weight: 600; }
+  .p  { color: var(--purple); font-weight: 600; }
+  .b  { color: var(--blue); font-weight: 600; }
+  .r  { color: var(--red); font-weight: 600; }
+  .mono { font-family: 'JetBrains Mono', monospace; }
+
+  /* ── SVG graph diagrams ── */
+  svg.diagram { display: block; margin: 0 auto; overflow: visible; }
+
+  /* ── pill badges ── */
+  .pill {
+    display: inline-block; font-family: 'JetBrains Mono', monospace;
+    font-size: .44em; padding: .08em .4em; border-radius: 99px;
+    border: 1px solid; margin: 0 .08em;
+  }
+  .pill.amber { color: var(--amber); border-color: var(--amber); }
+  .pill.green { color: var(--green); border-color: var(--green); }
+  .pill.purple{ color: var(--purple); border-color: var(--purple); }
+  .pill.blue  { color: var(--blue); border-color: var(--blue); }
+
+  /* ── footer — hidden ── */
+  .reveal .slide-footer { display: none; }
+  /* title slide special */
+  .title-slide h1 { font-size: 1.8em; }
+  .title-slide .subtitle {
+    font-size: .7em; color: var(--green); font-family: 'DM Sans', sans-serif;
+    font-weight: 300; letter-spacing: .04em; margin: .3em 0 .6em;
+  }
+  .title-slide .meta { font-size: .48em; color: var(--muted); font-family: 'JetBrains Mono', monospace; }
+
+  /* ── super-step animator ── */
+  .ss-row {
+    display: flex; gap: .25em; align-items: center;
+    margin: .1em 0; font-size: .55em; font-family: 'JetBrains Mono', monospace;
+  }
+  .ss-node {
+    padding: .2em .55em; border-radius: 5px; font-size: .9em;
+    background: var(--bg3); border: 1px solid var(--border); color: var(--text);
+  }
+  .ss-node.active { background: #1a2a1a; border-color: var(--green); color: var(--green); }
+  .ss-node.done   { background: #1a1a2a; border-color: var(--purple); color: var(--purple); }
+  .ss-arrow { color: var(--amber); }
+  .ss-label { font-size: .8em; color: var(--muted); margin-left: .3em; }
+
+  /* reduce default margins */
+  .reveal ul, .reveal ol { margin: .15em 0 .15em 1em; }
+.reveal .slides > section { display: flex !important; flex-direction: column !important; overflow-y: auto !important; align-items: stretch !important; justify-content: flex-start !important; }
+</style>
+</head>
+<body>
+<div class="reveal">
+<div class="slides">
+
+<!-- ═══════════════════════════════════════════════════════════════
+  SLIDE 01 — Title
+══════════════════════════════════════════════════════════════════ -->
+<section class="title-slide" data-background-color="#0a0a0f">
+  <div style="font-family:'JetBrains Mono',monospace; font-size:.5em; color:var(--muted); margin-bottom:.4em; letter-spacing:.1em;">COMPUTER SCIENCE FUNDAMENTALS SERIES</div>
+  <h1>Greedy<br>Algorithms</h1>
+  <div class="subtitle">
+    Greedy choice property · Activity selection · Huffman coding ·<br>
+    Fractional knapsack · Exchange arguments · Matroid theory
+  </div>
+  <div style="width:60px; height:3px; background:var(--amber); margin-bottom:1.4em;"></div>
+  <div class="meta">
+    Mid-level software engineer track &nbsp;·&nbsp; 20 slides
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════
+  SLIDE 02 — The Greedy Paradigm
+══════════════════════════════════════════════════════════════════ -->
+<section data-background-color="#0a0a0f">
+  <div class="slide-hdr">
+    <span class="tag">02</span>
+    <h2>The Greedy Paradigm</h2>
+  </div>
+  <div class="cols cols-2">
+    <div>
+      <h3>What is a greedy algorithm?</h3>
+      <p>A greedy algorithm builds a solution piece by piece, always choosing the <strong class="a">locally optimal</strong> option at each step, hoping that local choices lead to a <strong class="a">globally optimal</strong> solution.</p>
+      <ul>
+        <li>At each decision point, pick the choice that looks best <em>right now</em></li>
+        <li>Never reconsider previous choices — no backtracking</li>
+        <li>Hope that local optimality leads to global optimality</li>
+        <li>Much simpler and faster than exhaustive search or DP</li>
+      </ul>
+    </div>
+    <div>
+      <h3>The greedy template</h3>
+      <pre><code class="language-plaintext">GREEDY-SOLVE(problem):
+    solution = empty
+    while problem is not solved:
+        candidate = SELECT best remaining option
+        if candidate is FEASIBLE:
+            solution = solution + candidate
+    return solution</code></pre>
+      <div class="card amber" style="margin-top:.6em">
+        <h3>When does it work?</h3>
+        <p>A greedy strategy is optimal only when the problem has:</p>
+        <ul>
+          <li><strong class="a">Greedy choice property</strong> — a locally optimal choice is part of some globally optimal solution</li>
+          <li><strong class="a">Optimal substructure</strong> — optimal solution contains optimal solutions to sub-problems</li>
+        </ul>
+      </div>
+      <div class="card blue" style="margin-top:.4em">
+        <p>Not every optimisation problem has these properties. Proving greedy correctness is the hard part — the algorithm itself is usually simple.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════
+  SLIDE 03 — Greedy Choice Property & Optimal Substructure
+══════════════════════════════════════════════════════════════════ -->
+<section data-background-color="#0a0a0f">
+  <div class="slide-hdr">
+    <span class="tag">03</span>
+    <h2>Greedy Choice Property &amp; Optimal Substructure</h2>
+  </div>
+  <div class="cols cols-2">
+    <div>
+      <div class="card amber">
+        <h3>Greedy choice property</h3>
+        <p>At every step, we can make a choice that is locally best without considering future sub-problems, and still reach a global optimum.</p>
+        <ul>
+          <li>There exists an optimal solution that includes the greedy choice</li>
+          <li>We do not need to solve all sub-problems first (unlike DP)</li>
+          <li>Proof: assume OPT does <em>not</em> include the greedy choice, then show we can swap it in without worsening the result</li>
+        </ul>
+      </div>
+      <div class="card green" style="margin-top:.4em">
+        <h3>Optimal substructure</h3>
+        <p>After making the greedy choice, the remaining problem is a smaller instance of the same type, and its optimal solution combined with the greedy choice yields the overall optimum.</p>
+        <ul>
+          <li>Shared with DP — both require this property</li>
+          <li>Difference: greedy commits to one sub-problem; DP considers all</li>
+        </ul>
+      </div>
+    </div>
+    <div>
+      <h3>Proof strategy (exchange argument)</h3>
+      <table>
+        <thead><tr><th>Step</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td><span class="a">1. Define</span></td><td>Formalise the greedy choice</td></tr>
+          <tr><td><span class="a">2. Assume</span></td><td>Suppose OPT exists that does not include the greedy choice</td></tr>
+          <tr><td><span class="a">3. Exchange</span></td><td>Modify OPT by swapping in the greedy choice — show no worse</td></tr>
+          <tr><td><span class="a">4. Conclude</span></td><td>An optimal solution including the greedy choice exists</td></tr>
+        </tbody>
+      </table>
+      <div class="card purple" style="margin-top:.6em">
+        <p>This "exchange argument" is the workhorse proof technique for greedy correctness. If you cannot construct a valid exchange, the greedy choice property likely does not hold.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════
+  SLIDE 04 — Activity Selection / Interval Scheduling
+══════════════════════════════════════════════════════════════════ -->
+<section data-background-color="#0a0a0f">
+  <div class="slide-hdr">
+    <span class="tag">04</span>
+    <h2>Activity Selection / Interval Scheduling</h2>
+  </div>
+  <div class="cols cols-6040">
+    <div>
+      <h3>Problem</h3>
+      <p>Given <code>n</code> activities with start and finish times <code>(s_i, f_i)</code>, select the maximum number of non-overlapping activities.</p>
+      <table>
+        <thead><tr><th>Activity</th><th>Start</th><th>Finish</th></tr></thead>
+        <tbody>
+          <tr><td>A</td><td>0</td><td>6</td></tr>
+          <tr><td>B</td><td>1</td><td>4</td></tr>
+          <tr><td>C</td><td>3</td><td>5</td></tr>
+          <tr><td>D</td><td>5</td><td>7</td></tr>
+          <tr><td>E</td><td>3</td><td>9</td></tr>
+          <tr><td>F</td><td>5</td><td>9</td></tr>
+          <tr><td>G</td><td>6</td><td>10</td></tr>
+          <tr><td>H</td><td>8</td><td>11</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div>
+      <div class="card amber">
+        <h3>Greedy strategy</h3>
+        <p><strong class="a">Sort by finish time</strong> (earliest first), then greedily select each activity whose start time >= the finish time of the last selected.</p>
+      </div>
+      <div class="card green" style="margin-top:.4em">
+        <h3>Why earliest finish time?</h3>
+        <ul>
+          <li><span class="r">Earliest start?</span> Fails — a long activity starting early blocks many short ones</li>
+          <li><span class="r">Shortest duration?</span> Fails — a short activity in the middle can block two others</li>
+          <li><span class="b">Fewest conflicts?</span> Works but slower to compute</li>
+          <li><span class="g">Earliest finish</span> leaves the most room for subsequent activities</li>
+        </ul>
+      </div>
+      <div class="card blue" style="margin-top:.4em">
+        <p>Earliest finish time is the canonical greedy choice for interval scheduling.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════
+  SLIDE 05 — Activity Selection — Proof & Implementation
+══════════════════════════════════════════════════════════════════ -->
+<section data-background-color="#0a0a0f">
+  <div class="slide-hdr">
+    <span class="tag">05</span>
+    <h2>Activity Selection — Proof &amp; Implementation</h2>
+  </div>
+  <div class="cols cols-2">
+    <div>
+      <h3>Correctness proof sketch</h3>
+      <ol>
+        <li>Sort activities by finish time: <code>f_1 &lt;= f_2 &lt;= ... &lt;= f_n</code></li>
+        <li>Activity 1 (earliest finish) is in some OPT — if not, swap the first activity in OPT with activity 1; it finishes no later, so no new conflicts</li>
+        <li>After selecting activity 1, the remaining problem is the same type</li>
+        <li>By induction, the greedy algorithm is optimal</li>
+      </ol>
+      <div class="card purple" style="margin-top:.4em">
+        <h3>Complexity</h3>
+        <ul>
+          <li><strong class="a">Time:</strong> <code>O(n log n)</code> — dominated by sorting</li>
+          <li><strong class="a">Space:</strong> <code>O(1)</code> extra (if sorted in place)</li>
+        </ul>
+      </div>
+      <div class="card red" style="margin-top:.4em">
+        <p>The <strong>weighted</strong> variant (each activity has a profit) requires dynamic programming — greedy no longer works.</p>
+      </div>
+    </div>
+    <div>
+      <h3>Implementation</h3>
+      <pre><code class="language-python">def activity_selection(activities):
+    # Sort by finish time
+    activities.sort(key=lambda x: x[1])
+    selected = [activities[0]]
+    last_finish = activities[0][1]
+
+    for start, finish in activities[1:]:
+        if start >= last_finish:
+            selected.append((start, finish))
+            last_finish = finish
+
+    return selected
+
+# Example
+acts = [(0,6),(1,4),(3,5),(5,7),
+        (3,9),(5,9),(6,10),(8,11)]
+print(activity_selection(acts))
+# [(1,4), (5,7), (8,11)]</code></pre>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════
+  SLIDE 06 — Huffman Coding — Idea
+══════════════════════════════════════════════════════════════════ -->
+<section data-background-color="#0a0a0f">
+  <div class="slide-hdr">
+    <span class="tag">06</span>
+    <h2>Huffman Coding — Idea</h2>
+  </div>
+  <div class="cols cols-2">
+    <div>
+      <h3>Problem</h3>
+      <p>Given characters with known frequencies, assign variable-length binary codes to minimise total encoded length.</p>
+      <ul>
+        <li>Frequent characters get <strong class="g">short codes</strong></li>
+        <li>Rare characters get <strong class="p">long codes</strong></li>
+        <li>Must be a <strong class="a">prefix-free code</strong> — no code is a prefix of another — for unambiguous decoding</li>
+      </ul>
+      <div class="card green" style="margin-top:.5em">
+        <p>Huffman coding is the foundation of data compression. Used in DEFLATE (gzip, PNG), JPEG, and many other formats.</p>
+      </div>
+    </div>
+    <div>
+      <h3>Example</h3>
+      <table>
+        <thead><tr><th>Char</th><th>Freq</th><th>Fixed (3-bit)</th><th>Huffman</th></tr></thead>
+        <tbody>
+          <tr><td>a</td><td>45</td><td>000</td><td><span class="g">0</span></td></tr>
+          <tr><td>b</td><td>13</td><td>001</td><td><span class="p">101</span></td></tr>
+          <tr><td>c</td><td>12</td><td>010</td><td><span class="p">100</span></td></tr>
+          <tr><td>d</td><td>16</td><td>011</td><td><span class="p">111</span></td></tr>
+          <tr><td>e</td><td>9</td><td>100</td><td><span class="r">1101</span></td></tr>
+          <tr><td>f</td><td>5</td><td>101</td><td><span class="r">1100</span></td></tr>
+        </tbody>
+      </table>
+      <div class="card amber" style="margin-top:.5em">
+        <ul>
+          <li>Fixed-length: <code>100 × 3 = 300</code> bits</li>
+          <li>Huffman: <code>45×1 + 13×3 + 12×3 + 16×3 + 9×4 + 5×4 = 224</code> bits</li>
+          <li><strong class="a">25% smaller</strong></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════
+  SLIDE 07 — Huffman Coding — Algorithm
+══════════════════════════════════════════════════════════════════ -->
+<section data-background-color="#0a0a0f">
+  <div class="slide-hdr">
+    <span class="tag">07</span>
+    <h2>Huffman Coding — Algorithm</h2>
+  </div>
+  <div class="cols cols-2">
+    <div>
+      <h3>Algorithm</h3>
+      <ol>
+        <li>Create a leaf node for each character with its frequency</li>
+        <li>Insert all nodes into a <strong class="a">min-priority queue</strong></li>
+        <li>While the queue has more than one node:
+          <ul>
+            <li>Extract the two nodes with lowest frequency</li>
+            <li>Create a new internal node with these as children; frequency = sum</li>
+            <li>Insert the new node back into the queue</li>
+          </ul>
+        </li>
+        <li>The remaining node is the root of the Huffman tree</li>
+      </ol>
+      <div class="card green" style="margin-top:.4em">
+        <h3>Greedy choice</h3>
+        <p>Always merge the two lowest-frequency nodes. This ensures the rarest characters end up deepest in the tree (longest codes).</p>
+      </div>
+      <div class="card purple" style="margin-top:.3em">
+        <h3>Complexity</h3>
+        <ul>
+          <li><strong class="a">Time:</strong> <code>O(n log n)</code> — each heap op is <code>O(log n)</code>, performed <code>O(n)</code> times</li>
+          <li><strong class="a">Space:</strong> <code>O(n)</code> for the tree</li>
+        </ul>
+      </div>
+    </div>
+    <div>
+      <h3>Implementation</h3>
+      <pre><code class="language-python">import heapq
+
+def huffman(freq):
+    heap = [(f, i, char)
+            for i, (char, f)
+            in enumerate(freq.items())]
+    heapq.heapify(heap)
+    counter = len(heap)
+
+    while len(heap) > 1:
+        f1, _, left  = heapq.heappop(heap)
+        f2, _, right = heapq.heappop(heap)
+        merged = (left, right)
+        heapq.heappush(
+            heap,
+            (f1 + f2, counter, merged)
+        )
+        counter += 1
+
+    return heap[0][2]  # root of tree
+
+freq = {'a':45, 'b':13, 'c':12,
+        'd':16, 'e':9,  'f':5}
+tree = huffman(freq)</code></pre>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════
+  SLIDE 08 — Fractional Knapsack
+══════════════════════════════════════════════════════════════════ -->
+<section data-background-color="#0a0a0f">
+  <div class="slide-hdr">
+    <span class="tag">08</span>
+    <h2>Fractional Knapsack</h2>
+  </div>
+  <div class="cols cols-2">
+    <div>
+      <h3>Problem</h3>
+      <p>Given <code>n</code> items with weight <code>w_i</code> and value <code>v_i</code>, and a knapsack of capacity <code>W</code>, maximise total value. <strong class="a">Fractions of items are allowed.</strong></p>
+      <h3>Greedy strategy</h3>
+      <ol>
+        <li>Compute value-to-weight ratio <code>v_i / w_i</code></li>
+        <li>Sort items by ratio in decreasing order</li>
+        <li>Take whole items if they fit; otherwise take the fraction that fills the remaining capacity</li>
+      </ol>
+      <div class="card amber" style="margin-top:.5em">
+        <h3>Why greedy works</h3>
+        <p>The item with the highest ratio should be included as much as possible. If it were not, we could swap in more of it for less of a lower-ratio item, improving the total.</p>
+      </div>
+      <div class="card purple" style="margin-top:.3em">
+        <h3>Complexity</h3>
+        <ul>
+          <li><strong class="a">Time:</strong> <code>O(n log n)</code> for sorting</li>
+          <li><strong class="a">Space:</strong> <code>O(1)</code> extra</li>
+        </ul>
+      </div>
+    </div>
+    <div>
+      <h3>Example</h3>
+      <table>
+        <thead><tr><th>Item</th><th>Value</th><th>Weight</th><th>Ratio</th></tr></thead>
+        <tbody>
+          <tr><td>A</td><td>60</td><td>10</td><td><span class="g">6.0</span></td></tr>
+          <tr><td>B</td><td>100</td><td>20</td><td><span class="g">5.0</span></td></tr>
+          <tr><td>C</td><td>120</td><td>30</td><td><span class="g">4.0</span></td></tr>
+        </tbody>
+      </table>
+      <p style="margin-top:.4em">Capacity <code>W = 50</code>:</p>
+      <div class="ss-row">
+        <span class="ss-node done">A: 10</span>
+        <span class="ss-arrow">+</span>
+        <span class="ss-node done">B: 20</span>
+        <span class="ss-arrow">+</span>
+        <span class="ss-node active">C: 20/30</span>
+      </div>
+      <p>Total: <code>60 + 100 + (20/30)×120 = <strong class="a">240</strong></code></p>
+      <div class="card red" style="margin-top:.5em">
+        <h3>0/1 Knapsack</h3>
+        <p><strong>No fractions allowed</strong> — does NOT have the greedy choice property. Requires dynamic programming.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════
+  SLIDE 09 — Job Sequencing with Deadlines
+══════════════════════════════════════════════════════════════════ -->
+<section data-background-color="#0a0a0f">
+  <div class="slide-hdr">
+    <span class="tag">09</span>
+    <h2>Job Sequencing with Deadlines</h2>
+  </div>
+  <div class="cols cols-2">
+    <div>
+      <h3>Problem</h3>
+      <p>Given <code>n</code> jobs with deadline <code>d_i</code> and profit <code>p_i</code>, each taking one unit of time, schedule on a single machine to maximise total profit. A job earns its profit only if completed by its deadline.</p>
+      <div class="card amber" style="margin-top:.4em">
+        <h3>Greedy strategy</h3>
+        <ol>
+          <li>Sort jobs by profit in decreasing order</li>
+          <li>For each job, schedule it in the <strong class="a">latest available slot</strong> before its deadline</li>
+          <li>If no slot is available, skip the job</li>
+        </ol>
+      </div>
+      <div class="card purple" style="margin-top:.3em">
+        <h3>Complexity</h3>
+        <ul>
+          <li><strong class="a">Time:</strong> <code>O(n log n)</code> for sorting + <code>O(n × d)</code> for scheduling</li>
+          <li>Can be <code>O(n log n)</code> with Union-Find</li>
+          <li><strong class="a">Space:</strong> <code>O(d)</code> for the slot array</li>
+        </ul>
+      </div>
+    </div>
+    <div>
+      <h3>Example</h3>
+      <table>
+        <thead><tr><th>Job</th><th>Deadline</th><th>Profit</th></tr></thead>
+        <tbody>
+          <tr><td>J1</td><td>2</td><td><span class="a">100</span></td></tr>
+          <tr><td>J2</td><td>1</td><td>19</td></tr>
+          <tr><td>J3</td><td>2</td><td><span class="g">27</span></td></tr>
+          <tr><td>J4</td><td>1</td><td>25</td></tr>
+          <tr><td>J5</td><td>3</td><td><span class="b">15</span></td></tr>
+        </tbody>
+      </table>
+      <p style="margin-top:.3em">Sorted by profit: J1, J3, J4, J2, J5</p>
+      <div style="display:flex; flex-direction:column; gap:.2em; margin-top:.3em">
+        <div class="ss-row"><span class="ss-node done">Slot 1: J3</span><span class="ss-node done">Slot 2: J1</span><span class="ss-node active">Slot 3: J5</span></div>
+      </div>
+      <p style="margin-top:.3em">J4, J2 skipped — no available slots before deadline</p>
+      <div class="card green" style="margin-top:.3em">
+        <p>Total profit: <strong class="a">100 + 27 + 15 = 142</strong></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════
+  SLIDE 10 — Minimum Number of Coins
+══════════════════════════════════════════════════════════════════ -->
+<section data-background-color="#0a0a0f">
+  <div class="slide-hdr">
+    <span class="tag">10</span>
+    <h2>Minimum Number of Coins</h2>
+  </div>
+  <div class="cols cols-2">
+    <div>
+      <h3>Greedy strategy</h3>
+      <p>Always pick the <strong class="a">largest denomination</strong> that does not exceed the remaining amount.</p>
+      <div class="card green" style="margin-top:.4em">
+        <h3>Example — standard denominations</h3>
+        <p>Coins: <code>{1, 5, 10, 25}</code> &nbsp; Target: <code>41</code></p>
+        <div class="ss-row" style="margin-top:.3em">
+          <span class="ss-node done">25</span>
+          <span class="ss-arrow">→</span>
+          <span class="ss-node done">10</span>
+          <span class="ss-arrow">→</span>
+          <span class="ss-node done">5</span>
+          <span class="ss-arrow">→</span>
+          <span class="ss-node active">1</span>
+        </div>
+        <p style="margin-top:.2em">Result: <strong class="g">4 coins</strong> (optimal)</p>
+      </div>
+    </div>
+    <div>
+      <div class="card red">
+        <h3>When greedy fails</h3>
+        <p>Coins: <code>{1, 3, 4}</code> &nbsp; Target: <code>6</code></p>
+        <ul>
+          <li><span class="r">Greedy:</span> 4 + 1 + 1 = <strong>3 coins</strong></li>
+          <li><span class="g">Optimal:</span> 3 + 3 = <strong>2 coins</strong></li>
+        </ul>
+        <p style="margin-top:.3em">The denomination set is not <strong class="a">canonical</strong> — greedy does not always work.</p>
+      </div>
+      <div class="card blue" style="margin-top:.5em">
+        <h3>Canonical coin systems</h3>
+        <p>US/UK/Euro denominations are canonical — greedy works. For arbitrary denominations, use DP. Testing whether a denomination set is canonical is itself a non-trivial problem.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════
+  SLIDE 11 — Minimum Number of Platforms
+══════════════════════════════════════════════════════════════════ -->
+<section data-background-color="#0a0a0f">
+  <div class="slide-hdr">
+    <span class="tag">11</span>
+    <h2>Minimum Number of Platforms</h2>
+  </div>
+  <div class="cols cols-2">
+    <div>
+      <h3>Problem</h3>
+      <p>Given arrival and departure times of <code>n</code> trains, find the minimum number of platforms required so that no train waits.</p>
+      <div class="card amber" style="margin-top:.4em">
+        <h3>Greedy strategy</h3>
+        <ol>
+          <li>Sort all arrival and departure times separately</li>
+          <li>Sweep through events chronologically (two-pointer)</li>
+          <li>Arrival increments platform count; departure decrements</li>
+          <li>Track the maximum concurrent count</li>
+        </ol>
+      </div>
+      <h3 style="margin-top:.4em">Example</h3>
+      <table>
+        <thead><tr><th>Train</th><th>Arrival</th><th>Departure</th></tr></thead>
+        <tbody>
+          <tr><td>T1</td><td>09:00</td><td>09:10</td></tr>
+          <tr><td>T2</td><td>09:40</td><td>12:00</td></tr>
+          <tr><td>T3</td><td>09:50</td><td>11:20</td></tr>
+          <tr><td>T4</td><td>11:00</td><td>11:30</td></tr>
+          <tr><td>T5</td><td>15:00</td><td>19:00</td></tr>
+          <tr><td>T6</td><td>18:00</td><td>20:00</td></tr>
+        </tbody>
+      </table>
+      <p>Peak overlap: T2, T3, T4 → <strong class="a">3 platforms</strong></p>
+    </div>
+    <div>
+      <h3>Implementation</h3>
+      <pre><code class="language-python">def min_platforms(arrivals, departures):
+    arrivals.sort()
+    departures.sort()
+    plat_needed = 0
+    max_plat = 0
+    i = j = 0
+
+    while i < len(arrivals):
+        if arrivals[i] <= departures[j]:
+            plat_needed += 1
+            max_plat = max(max_plat,
+                          plat_needed)
+            i += 1
+        else:
+            plat_needed -= 1
+            j += 1
+
+    return max_plat</code></pre>
+      <div class="card purple" style="margin-top:.4em">
+        <h3>Complexity</h3>
+        <ul>
+          <li><strong class="a">Time:</strong> <code>O(n log n)</code> — dominated by sorting</li>
+          <li><strong class="a">Space:</strong> <code>O(1)</code> extra</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════
+  SLIDE 12 — Kruskal's MST
+══════════════════════════════════════════════════════════════════ -->
+<section data-background-color="#0a0a0f">
+  <div class="slide-hdr">
+    <span class="tag">12</span>
+    <h2>Greedy Graph Algorithms — Kruskal's MST</h2>
+  </div>
+  <div class="cols cols-2">
+    <div>
+      <h3>Minimum Spanning Tree (MST)</h3>
+      <p>Given a connected, weighted, undirected graph, find a spanning tree with minimum total edge weight.</p>
+      <div class="card amber" style="margin-top:.4em">
+        <h3>Kruskal's algorithm</h3>
+        <ol>
+          <li>Sort all edges by weight (ascending)</li>
+          <li>For each edge: if adding it does not create a cycle, include it in the MST</li>
+          <li>Stop when <code>V - 1</code> edges are selected</li>
+        </ol>
+      </div>
+      <div class="card green" style="margin-top:.3em">
+        <h3>Greedy choice</h3>
+        <p>Always pick the lightest edge that does not form a cycle. The <strong class="g">cut property</strong> guarantees this is safe: the minimum-weight edge crossing any cut must be in some MST.</p>
+      </div>
+      <div class="card purple" style="margin-top:.3em">
+        <h3>Complexity</h3>
+        <ul>
+          <li><strong class="a">Time:</strong> <code>O(E log E)</code> — dominated by sorting edges</li>
+          <li><strong class="a">Space:</strong> <code>O(V)</code> for Union-Find</li>
+        </ul>
+        <p style="margin-top:.2em">Best for <strong>sparse</strong> graphs where <code>E ≈ V</code>.</p>
+      </div>
+    </div>
+    <div>
+      <h3>Pseudocode (Union-Find)</h3>
+      <pre><code class="language-plaintext">KRUSKAL(G):
+    sort edges by weight
+    UF = UnionFind(V)
+    mst = []
+    for (u, v, w) in sorted_edges:
+        if UF.find(u) != UF.find(v):
+            mst.append((u, v, w))
+            UF.union(u, v)
+    return mst</code></pre>
+      <h3 style="margin-top:.4em">Trace example</h3>
+      <div style="background:var(--bg2); border:1px solid var(--border); border-radius:6px; padding:.5em;">
+        <svg viewBox="0 0 320 180" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto">
+          <defs>
+            <marker id="arr-k" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
+              <path d="M0,0 L0,6 L6,3 z" fill="#4ecb8d"/>
+            </marker>
+          </defs>
+          <!-- vertices -->
+          <circle cx="60" cy="30" r="18" fill="#1a1a28" stroke="#f5a623" stroke-width="2"/>
+          <text x="60" y="35" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="12" fill="#f5a623">A</text>
+          <circle cx="200" cy="30" r="18" fill="#1a1a28" stroke="#f5a623" stroke-width="2"/>
+          <text x="200" y="35" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="12" fill="#f5a623">B</text>
+          <circle cx="280" cy="100" r="18" fill="#1a1a28" stroke="#f5a623" stroke-width="2"/>
+          <text x="280" y="105" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="12" fill="#f5a623">C</text>
+          <circle cx="130" cy="150" r="18" fill="#1a1a28" stroke="#f5a623" stroke-width="2"/>
+          <text x="130" y="155" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="12" fill="#f5a623">D</text>
+          <!-- MST edges (green) -->
+          <line x1="78" y1="30" x2="182" y2="30" stroke="#4ecb8d" stroke-width="2"/>
+          <text x="130" y="22" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="10" fill="#4ecb8d">1</text>
+          <line x1="210" y1="46" x2="268" y2="86" stroke="#4ecb8d" stroke-width="2"/>
+          <text x="248" y="60" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="10" fill="#4ecb8d">2</text>
+          <line x1="148" y1="150" x2="264" y2="108" stroke="#4ecb8d" stroke-width="2"/>
+          <text x="210" y="140" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="10" fill="#4ecb8d">3</text>
+          <!-- non-MST edges (muted) -->
+          <line x1="70" y1="46" x2="120" y2="134" stroke="#2a2a3a" stroke-width="1" stroke-dasharray="4"/>
+          <text x="80" y="94" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="9" fill="#8888a8">5</text>
+          <line x1="200" y1="48" x2="142" y2="134" stroke="#2a2a3a" stroke-width="1" stroke-dasharray="4"/>
+          <text x="180" y="94" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="9" fill="#8888a8">4</text>
+        </svg>
+      </div>
+      <p style="font-size:.48em; color:var(--muted); margin-top:.2em; text-align:center;">Green edges = MST (weight 1+2+3=6). Dashed = rejected.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════
+  SLIDE 13 — Prim's MST
+══════════════════════════════════════════════════════════════════ -->
+<section data-background-color="#0a0a0f">
+  <div class="slide-hdr">
+    <span class="tag">13</span>
+    <h2>Greedy Graph Algorithms — Prim's MST</h2>
+  </div>
+  <div class="cols cols-2">
+    <div>
+      <div class="card amber">
+        <h3>Prim's algorithm</h3>
+        <ol>
+          <li>Start from any vertex; add it to the MST set</li>
+          <li>Repeatedly add the <strong class="a">minimum-weight edge</strong> connecting an MST vertex to a non-MST vertex</li>
+          <li>Stop when all vertices are in the MST</li>
+        </ol>
+      </div>
+      <div class="card green" style="margin-top:.4em">
+        <h3>Greedy choice</h3>
+        <p>Always pick the cheapest edge that expands the current tree. The cut property again guarantees optimality.</p>
+      </div>
+      <h3 style="margin-top:.4em">Pseudocode (binary heap)</h3>
+      <pre><code class="language-plaintext">PRIM(G, start):
+    key[v] = INF for all v
+    key[start] = 0
+    parent[v] = NIL for all v
+    Q = min-heap of all vertices
+    while Q not empty:
+        u = EXTRACT-MIN(Q)
+        for each neighbour v of u:
+            if v in Q and w(u,v) < key[v]:
+                parent[v] = u
+                key[v] = w(u,v)
+                DECREASE-KEY(Q, v)
+    return parent</code></pre>
+    </div>
+    <div>
+      <h3>Complexity comparison</h3>
+      <table>
+        <thead><tr><th>Implementation</th><th>Time</th></tr></thead>
+        <tbody>
+          <tr><td>Adjacency matrix</td><td><code>O(V²)</code></td></tr>
+          <tr><td>Binary heap + adj list</td><td><code>O((V+E) log V)</code></td></tr>
+          <tr><td>Fibonacci heap + adj list</td><td><code>O(E + V log V)</code></td></tr>
+        </tbody>
+      </table>
+      <div class="card blue" style="margin-top:.5em">
+        <h3>Prim's vs Kruskal's</h3>
+        <table>
+          <thead><tr><th>Aspect</th><th>Kruskal's</th><th>Prim's</th></tr></thead>
+          <tbody>
+            <tr><td>Approach</td><td>Edge-centric</td><td>Vertex-centric</td></tr>
+            <tr><td>Best for</td><td>Sparse graphs</td><td>Dense graphs</td></tr>
+            <tr><td>Data structure</td><td>Union-Find</td><td>Priority queue</td></tr>
+            <tr><td>Starting point</td><td>Any order</td><td>Fixed source</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════
+  SLIDE 14 — Dijkstra's Shortest Path
+══════════════════════════════════════════════════════════════════ -->
+<section data-background-color="#0a0a0f">
+  <div class="slide-hdr">
+    <span class="tag">14</span>
+    <h2>Dijkstra's Shortest Path</h2>
+  </div>
+  <div class="cols cols-2">
+    <div>
+      <h3>Problem</h3>
+      <p>Find the shortest path from a single source to all other vertices in a weighted graph with <strong class="a">non-negative</strong> edge weights.</p>
+      <div class="card amber" style="margin-top:.4em">
+        <h3>Algorithm</h3>
+        <ol>
+          <li>Set <code>dist[source] = 0</code>, <code>dist[v] = ∞</code> for all others</li>
+          <li>Use a min-priority queue keyed by <code>dist</code></li>
+          <li>Extract vertex <code>u</code> with minimum <code>dist</code>, then relax all neighbours</li>
+          <li>Repeat until the queue is empty</li>
+        </ol>
+      </div>
+      <div class="card green" style="margin-top:.3em">
+        <h3>Greedy choice</h3>
+        <p>Always process the unvisited vertex with the smallest known distance. Once extracted, its distance is <strong class="g">final</strong>.</p>
+      </div>
+      <div class="card red" style="margin-top:.3em">
+        <h3>Why non-negative weights?</h3>
+        <p>If edge weights can be negative, a vertex extracted from the queue might later be reachable via a cheaper path. This breaks the greedy invariant. Use <strong class="r">Bellman-Ford</strong> for negative weights.</p>
+      </div>
+    </div>
+    <div>
+      <h3>Complexity</h3>
+      <table>
+        <thead><tr><th>Implementation</th><th>Time</th></tr></thead>
+        <tbody>
+          <tr><td>Adjacency matrix</td><td><code>O(V²)</code></td></tr>
+          <tr><td>Binary heap + adj list</td><td><code>O((V+E) log V)</code></td></tr>
+          <tr><td>Fibonacci heap</td><td><code>O(E + V log V)</code></td></tr>
+        </tbody>
+      </table>
+      <h3 style="margin-top:.5em">Relaxation step</h3>
+      <pre><code class="language-python">def dijkstra(graph, source):
+    dist = {v: float('inf')
+            for v in graph}
+    dist[source] = 0
+    pq = [(0, source)]
+
+    while pq:
+        d, u = heapq.heappop(pq)
+        if d > dist[u]:
+            continue
+        for v, w in graph[u]:
+            if dist[u] + w < dist[v]:
+                dist[v] = dist[u] + w
+                heapq.heappush(pq,
+                    (dist[v], v))
+    return dist</code></pre>
+      <p style="font-size:.48em; color:var(--muted); margin-top:.3em;">Most widely used shortest-path algorithm — GPS routing, OSPF, game AI pathfinding.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════
+  SLIDE 15 — Greedy vs Dynamic Programming
+══════════════════════════════════════════════════════════════════ -->
+<section data-background-color="#0a0a0f">
+  <div class="slide-hdr">
+    <span class="tag">15</span>
+    <h2>Greedy vs Dynamic Programming</h2>
+  </div>
+  <div class="cols cols-2">
+    <div>
+      <h3>Similarities</h3>
+      <ul>
+        <li>Both require <strong class="a">optimal substructure</strong></li>
+        <li>Both solve optimisation problems</li>
+        <li>Both decompose the problem into sub-problems</li>
+      </ul>
+      <h3 style="margin-top:.4em">Key differences</h3>
+      <table>
+        <thead><tr><th>Aspect</th><th>Greedy</th><th>DP</th></tr></thead>
+        <tbody>
+          <tr><td>Choice timing</td><td>Before solving sub-problems</td><td>After solving sub-problems</td></tr>
+          <tr><td>Sub-problems</td><td>One remains</td><td>Multiple overlapping</td></tr>
+          <tr><td>Backtracking</td><td>Never</td><td>Considers all options</td></tr>
+          <tr><td>Proof</td><td>Greedy choice property</td><td>Bellman equation</td></tr>
+          <tr><td>Complexity</td><td><code>O(n log n)</code></td><td><code>O(n²)</code> or <code>O(nW)</code></td></tr>
+          <tr><td>Implementation</td><td>Simple loop</td><td>Table / memoisation</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div>
+      <h3>Decision guide</h3>
+      <div style="display:flex; flex-direction:column; gap:.3em; margin-top:0.3em">
+        <div class="card green">
+          <p><strong class="g">→ Greedy</strong> if you can prove the greedy choice property</p>
+        </div>
+        <div class="card purple">
+          <p><strong class="p">→ DP</strong> if you need to consider multiple choices per step</p>
+        </div>
+        <div class="card green">
+          <p><strong class="g">→ Greedy</strong> if there is a natural exchange argument</p>
+        </div>
+        <div class="card purple">
+          <p><strong class="p">→ DP</strong> if the problem has overlapping sub-problems</p>
+        </div>
+      </div>
+      <div class="card amber" style="margin-top:.5em">
+        <p>When in doubt, try greedy first. If you can prove it, you get a simpler, faster algorithm. If you cannot, switch to DP.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════
+  SLIDE 16 — When Greedy Fails
+══════════════════════════════════════════════════════════════════ -->
+<section data-background-color="#0a0a0f">
+  <div class="slide-hdr">
+    <span class="tag">16</span>
+    <h2>When Greedy Fails</h2>
+  </div>
+  <div class="cols cols-2">
+    <div>
+      <h3>Classic counter-examples</h3>
+      <div class="card red">
+        <h3>0/1 Knapsack</h3>
+        <p>Items <code>{(60,10), (100,20), (120,30)}</code>, capacity 50.</p>
+        <ul>
+          <li><span class="r">Greedy by ratio:</span> items 1+2 → value 160</li>
+          <li><span class="g">Optimal:</span> items 2+3 → value 220</li>
+        </ul>
+      </div>
+      <div class="card red" style="margin-top:.3em">
+        <h3>Coin change (non-canonical)</h3>
+        <p>Denominations <code>{1, 3, 4}</code>, target 6.</p>
+        <ul>
+          <li><span class="r">Greedy:</span> 4+1+1 = 3 coins</li>
+          <li><span class="g">Optimal:</span> 3+3 = 2 coins</li>
+        </ul>
+      </div>
+      <div class="card red" style="margin-top:.3em">
+        <h3>More failures</h3>
+        <ul>
+          <li><strong>Longest path in a DAG</strong> — greedy by heaviest next edge fails</li>
+          <li><strong>TSP</strong> — nearest-neighbour heuristic produces far-from-optimal tours</li>
+        </ul>
+      </div>
+    </div>
+    <div>
+      <h3>Why greedy fails</h3>
+      <ul>
+        <li>The locally best choice locks out a combination of future choices that would have been globally better</li>
+        <li>There is no "exchange" that can fix the solution</li>
+        <li>The problem lacks the greedy choice property, even though it may have optimal substructure</li>
+      </ul>
+      <div class="card green" style="margin-top:.5em">
+        <h3>Greedy as approximation</h3>
+        <p>Even when not optimal, greedy often provides a <strong class="g">good approximation</strong> with a provable bound:</p>
+        <table>
+          <thead><tr><th>Problem</th><th>Approximation</th></tr></thead>
+          <tbody>
+            <tr><td>Set cover</td><td><code>O(ln n)</code> factor</td></tr>
+            <tr><td>TSP (metric)</td><td>Within factor 2</td></tr>
+            <tr><td>Makespan (LPT)</td><td>Within factor 4/3</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════
+  SLIDE 17 — Exchange Arguments for Proofs
+══════════════════════════════════════════════════════════════════ -->
+<section data-background-color="#0a0a0f">
+  <div class="slide-hdr">
+    <span class="tag">17</span>
+    <h2>Exchange Arguments for Proofs</h2>
+  </div>
+  <div class="cols cols-2">
+    <div>
+      <h3>The technique</h3>
+      <p>An exchange argument proves greedy correctness by showing that any optimal solution can be transformed into the greedy solution without loss of quality.</p>
+      <div class="card amber" style="margin-top:.4em">
+        <h3>Template</h3>
+        <ol>
+          <li>Let <code>OPT</code> be an arbitrary optimal solution</li>
+          <li>Let <code>G</code> be the greedy solution</li>
+          <li>Find the first point where <code>OPT</code> and <code>G</code> differ</li>
+          <li>Modify <code>OPT</code> at that point to match <code>G</code> — show still feasible and no worse</li>
+          <li>Repeat until <code>OPT</code> is transformed into <code>G</code></li>
+          <li>Conclude: <code>G</code> is optimal</li>
+        </ol>
+      </div>
+    </div>
+    <div>
+      <div class="card green">
+        <h3>Example — activity selection</h3>
+        <ul>
+          <li><code>OPT</code> starts with activity <code>a_k</code> (not the earliest-finishing <code>a_1</code>)</li>
+          <li>Replace <code>a_k</code> with <code>a_1</code>: since <code>f_1 ≤ f_k</code>, activity <code>a_1</code> finishes no later → no new conflicts</li>
+          <li>Modified solution has the same size and is still valid</li>
+          <li>By induction on remaining activities, greedy is optimal</li>
+        </ul>
+      </div>
+      <div class="card purple" style="margin-top:.4em">
+        <h3>Tips</h3>
+        <ul>
+          <li>The exchange must preserve <strong class="p">feasibility</strong> — this is where most proofs break down</li>
+          <li>Usually argues about the <em>first</em> difference between OPT and G</li>
+          <li>Induction handles the remaining sub-problem</li>
+          <li>If you cannot construct a valid exchange, the greedy choice property likely does not hold</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════
+  SLIDE 18 — Matroid Theory
+══════════════════════════════════════════════════════════════════ -->
+<section data-background-color="#0a0a0f">
+  <div class="slide-hdr">
+    <span class="tag">18</span>
+    <h2>Matroid Theory</h2>
+  </div>
+  <div class="cols cols-2">
+    <div>
+      <h3>What is a matroid?</h3>
+      <p>A matroid is a pair <code>(S, I)</code> where <code>S</code> is a finite ground set and <code>I</code> is a family of "independent" subsets satisfying:</p>
+      <div class="card amber" style="margin-top:.3em">
+        <h3>Axioms</h3>
+        <ol>
+          <li><strong class="a">Hereditary:</strong> if <code>A ∈ I</code> and <code>B ⊆ A</code>, then <code>B ∈ I</code></li>
+          <li><strong class="a">Exchange:</strong> if <code>A, B ∈ I</code> and <code>|A| &lt; |B|</code>, then ∃ <code>x ∈ B \ A</code> such that <code>A ∪ {x} ∈ I</code></li>
+        </ol>
+      </div>
+      <div class="card green" style="margin-top:.4em">
+        <h3>Why matroids matter</h3>
+        <p><strong class="g">Rado-Edmonds theorem:</strong> a greedy algorithm produces an optimal solution for maximising a weighted sum over independent sets of a matroid — and <em>only</em> for matroids.</p>
+        <p style="margin-top:.2em">If your problem can be cast as optimising over a matroid, greedy is guaranteed to work.</p>
+      </div>
+    </div>
+    <div>
+      <h3>Examples of matroids</h3>
+      <table>
+        <thead><tr><th>Matroid</th><th>Ground set</th><th>Independent sets</th></tr></thead>
+        <tbody>
+          <tr><td><span class="a">Graphic</span></td><td>Edges of a graph</td><td>Acyclic edge subsets (forests)</td></tr>
+          <tr><td><span class="g">Uniform</span></td><td>Any set</td><td>Subsets of size ≤ k</td></tr>
+          <tr><td><span class="p">Partition</span></td><td>Partitioned elements</td><td>At most one per partition</td></tr>
+          <tr><td><span class="b">Linear</span></td><td>Vectors</td><td>Linearly independent subsets</td></tr>
+        </tbody>
+      </table>
+      <div class="card blue" style="margin-top:.5em">
+        <h3>Kruskal's and matroids</h3>
+        <p>Kruskal's MST works because forests form the independent sets of a <strong class="b">graphic matroid</strong>. The greedy algorithm on this matroid finds a maximum-weight basis (= MST).</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════
+  SLIDE 19 — Common Greedy Patterns & Pitfalls
+══════════════════════════════════════════════════════════════════ -->
+<section data-background-color="#0a0a0f">
+  <div class="slide-hdr">
+    <span class="tag">19</span>
+    <h2>Common Greedy Patterns &amp; Pitfalls</h2>
+  </div>
+  <div class="cols cols-2">
+    <div>
+      <h3>Patterns</h3>
+      <div class="cols cols-2" style="margin-top:.3em">
+        <div class="card amber">
+          <h3>Sort then scan</h3>
+          <p>Activity selection, fractional knapsack, job sequencing</p>
+        </div>
+        <div class="card green">
+          <h3>Priority queue</h3>
+          <p>Huffman coding, Dijkstra, Prim</p>
+        </div>
+        <div class="card purple">
+          <h3>Sweep line</h3>
+          <p>Minimum platforms, interval scheduling</p>
+        </div>
+        <div class="card blue">
+          <h3>Exchange argument</h3>
+          <p>Proving any greedy correct</p>
+        </div>
+      </div>
+    </div>
+    <div>
+      <h3>Common pitfalls</h3>
+      <ul>
+        <li><strong class="r">Assuming greedy works without proof</strong> — the most dangerous mistake; always verify the greedy choice property</li>
+        <li><strong class="r">Wrong sorting criterion</strong> — activity selection by start time or duration fails; only finish time works</li>
+        <li><strong class="r">Confusing fractional and 0/1</strong> — fractional knapsack is greedy; 0/1 is DP</li>
+        <li><strong class="r">Ignoring edge cases</strong> — empty input, ties in sorting, all items identical</li>
+        <li><strong class="r">Negative weights</strong> — Dijkstra fails with negative edges; Kruskal/Prim handle them fine</li>
+      </ul>
+      <div class="card amber" style="margin-top:.4em">
+        <h3>Interview strategy</h3>
+        <ol>
+          <li>Identify if the problem has the greedy choice property</li>
+          <li>State the greedy criterion explicitly</li>
+          <li>Argue correctness (exchange argument or matroid)</li>
+          <li>Code the sort + scan / priority queue</li>
+          <li>State time and space complexity</li>
+        </ol>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════
+  SLIDE 20 — Summary & Further Reading
+══════════════════════════════════════════════════════════════════ -->
+<section data-background-color="#0a0a0f">
+  <div class="slide-hdr">
+    <span class="tag">20</span>
+    <h2>Summary &amp; Further Reading</h2>
+  </div>
+  <div class="cols cols-2">
+    <div>
+      <h3>Key takeaways</h3>
+      <ul>
+        <li>Greedy algorithms make <strong class="a">locally optimal choices</strong> and never backtrack — simple and fast when correct</li>
+        <li>Correctness requires the <strong class="a">greedy choice property</strong> and <strong class="a">optimal substructure</strong> — prove it or switch to DP</li>
+        <li>Activity selection, Huffman coding, and fractional knapsack are canonical greedy problems</li>
+        <li>Kruskal's, Prim's, and Dijkstra's are greedy graph algorithms justified by the cut property</li>
+        <li><strong class="g">Exchange arguments</strong> are the standard proof technique</li>
+        <li><strong class="p">Matroid theory</strong> gives a complete characterisation of when greedy works</li>
+        <li>When greedy fails (0/1 knapsack, non-canonical coins), it often still provides a useful <strong class="b">approximation</strong></li>
+      </ul>
+    </div>
+    <div>
+      <h3>Recommended reading</h3>
+      <table>
+        <thead><tr><th>Source</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td><span class="a">CLRS</span></td><td><em>Introduction to Algorithms</em> — Ch. 15-16: greedy algorithms and matroid theory</td></tr>
+          <tr><td><span class="a">Kleinberg &amp; Tardos</span></td><td><em>Algorithm Design</em> — Ch. 4: greedy algorithms, exchange arguments</td></tr>
+          <tr><td><span class="a">Erickson</span></td><td><em>Algorithms</em> — <a href="http://jeffe.cs.illinois.edu/teaching/algorithms/" style="color:var(--blue)">jeffe.cs.illinois.edu</a> — free textbook</td></tr>
+          <tr><td><span class="a">MIT 6.046J</span></td><td><em>Design and Analysis of Algorithms</em> — greedy lectures on MIT OCW</td></tr>
+          <tr><td><span class="a">Oxley</span></td><td><em>Matroid Theory</em>, 2nd ed. — the definitive matroid reference</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+</div><!-- /slides -->
+</div><!-- /reveal -->
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/reveal.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/plugin/highlight/highlight.min.js"></script>
+<script>
+Reveal.initialize({
+  hash: true,
+  slideNumber: 'c/t',
+  transition: 'fade',
+  transitionSpeed: 'fast',
+  controls: true,
+  progress: true,
+  center: false,
+  width: 1100,
+  height: 900,
+  margin: 0.01,
+  plugins: [RevealHighlight],
+  highlight: { theme: 'monokai' }
+});
+</script>
+<script>
+(function(){
+  var h = Reveal.getConfig().height || 900;
+  var m = Reveal.getConfig().margin || 0.02;
+  var maxH = Math.floor(h * (1 - 2 * m)) + 'px';
+  function fixSlides(){
+    document.querySelectorAll('.reveal .slides>section,.reveal .slides>section>section').forEach(function(s){
+      s.style.display = 'block';
+      s.style.maxHeight = maxH;
+    });
+  }
+  Reveal.on('ready', fixSlides);
+  Reveal.on('slidechanged', fixSlides);
+})();
+</script>
+</body>
+</html>
