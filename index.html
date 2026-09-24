@@ -6,7 +6,7 @@
   <title>Greedy Algorithms</title>
 
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/reveal.min.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/theme/black.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/theme/white.min.css">
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -14,17 +14,17 @@
 
   <style>
   :root {
-    --amber:  #f5a623;
-    --green:  #4ecb8d;
-    --purple: #a78bfa;
-    --blue:   #60a5fa;
-    --red:    #f87171;
-    --bg:     #0a0a0f;
-    --bg2:    #10101a;
-    --bg3:    #181824;
-    --border: #2a2a3a;
-    --text:   #e8e8f0;
-    --muted:  #8888a8;
+    --amber:  #bf7d10;
+    --green:  #1c815a;
+    --purple: #6435bc;
+    --blue:   #2b3dc5;
+    --red:    #db3a30;
+    --bg:     #fafaf8;
+    --bg2:    #f1f1ee;
+    --bg3:    #eaeae6;
+    --border: #d1d1cb;
+    --text:   #161616;
+    --muted:  #6a6a63;
   }
 
   .reveal-viewport { background: var(--bg); }
@@ -40,7 +40,7 @@
   .reveal code { font-family: 'JetBrains Mono', monospace; font-size: .72em; }
   .reveal pre  { box-shadow: none; background: var(--bg3); border: 1px solid var(--border);
                  border-radius: 6px; padding: .3em .5em; margin: .25em 0; }
-  .reveal pre code { font-size: .52em; line-height: 1.35; background: transparent; color: #cdd6f4; }
+  .reveal pre code { font-size: .52em; line-height: 1.35; background: transparent; color: #242422; }
 
   /* ── slide chrome ── */
   .slide-hdr {
@@ -75,16 +75,16 @@
   .card.blue  { border-left: 3px solid var(--blue); }
   .card.red   { border-left: 3px solid var(--red); }
   .card h3 { font-size: .64em; margin: 0 0 .12em; }
-  .card p  { font-size: .52em; margin: 0; color: #b8b8d0; }
+  .card p  { font-size: .52em; margin: 0; color: #3d3d39; }
   .card ul { margin: 0; padding-left: 1em; }
-  .card li { font-size: .52em; color: #b8b8d0; margin-bottom: .02em; }
+  .card li { font-size: .52em; color: #3d3d39; margin-bottom: .02em; }
 
   /* ── table ── */
   .reveal table { width: 100%; border-collapse: collapse; font-size: .5em; }
   .reveal table th { background: var(--bg3); color: var(--amber); font-weight: 600;
                      padding: .2em .4em; border: 1px solid var(--border); text-align: left; }
-  .reveal table td { padding: .18em .4em; border: 1px solid var(--border); color: #ccc; }
-  .reveal table tr:nth-child(even) td { background: #0e0e18; }
+  .reveal table td { padding: .18em .4em; border: 1px solid var(--border); color: #2d2d2b; }
+  .reveal table tr:nth-child(even) td { background: #f3f3f1; }
 
   /* ── accent spans ── */
   .a  { color: var(--amber); font-weight: 600; }
@@ -127,8 +127,8 @@
     padding: .2em .55em; border-radius: 5px; font-size: .9em;
     background: var(--bg3); border: 1px solid var(--border); color: var(--text);
   }
-  .ss-node.active { background: #1a2a1a; border-color: var(--green); color: var(--green); }
-  .ss-node.done   { background: #1a1a2a; border-color: var(--purple); color: var(--purple); }
+  .ss-node.active { background: #d3e1d5; border-color: var(--green); color: var(--green); }
+  .ss-node.done   { background: #e6e6e2; border-color: var(--purple); color: var(--purple); }
   .ss-arrow { color: var(--amber); }
   .ss-label { font-size: .8em; color: var(--muted); margin-left: .3em; }
 
@@ -136,6 +136,7 @@
   .reveal ul, .reveal ol { margin: .15em 0 .15em 1em; }
 .reveal .slides > section { display: flex !important; flex-direction: column !important; overflow-y: auto !important; align-items: stretch !important; justify-content: flex-start !important; }
 </style>
+<style>.reveal .slide-number{background-color:transparent}</style>
 </head>
 <body>
 <div class="reveal">
@@ -144,7 +145,7 @@
 <!-- ═══════════════════════════════════════════════════════════════
   SLIDE 01 — Title
 ══════════════════════════════════════════════════════════════════ -->
-<section class="title-slide" data-background-color="#0a0a0f">
+<section class="title-slide" data-background-color="#fafaf8">
   <div style="font-family:'JetBrains Mono',monospace; font-size:.5em; color:var(--muted); margin-bottom:.4em; letter-spacing:.1em;">COMPUTER SCIENCE FUNDAMENTALS SERIES</div>
   <h1>Greedy<br>Algorithms</h1>
   <div class="subtitle">
@@ -160,7 +161,7 @@
 <!-- ═══════════════════════════════════════════════════════════════
   SLIDE 02 — The Greedy Paradigm
 ══════════════════════════════════════════════════════════════════ -->
-<section data-background-color="#0a0a0f">
+<section data-background-color="#fafaf8">
   <div class="slide-hdr">
     <span class="tag">02</span>
     <h2>The Greedy Paradigm</h2>
@@ -203,7 +204,7 @@
 <!-- ═══════════════════════════════════════════════════════════════
   SLIDE 03 — Greedy Choice Property & Optimal Substructure
 ══════════════════════════════════════════════════════════════════ -->
-<section data-background-color="#0a0a0f">
+<section data-background-color="#fafaf8">
   <div class="slide-hdr">
     <span class="tag">03</span>
     <h2>Greedy Choice Property &amp; Optimal Substructure</h2>
@@ -249,7 +250,7 @@
 <!-- ═══════════════════════════════════════════════════════════════
   SLIDE 04 — Activity Selection / Interval Scheduling
 ══════════════════════════════════════════════════════════════════ -->
-<section data-background-color="#0a0a0f">
+<section data-background-color="#fafaf8">
   <div class="slide-hdr">
     <span class="tag">04</span>
     <h2>Activity Selection / Interval Scheduling</h2>
@@ -296,7 +297,7 @@
 <!-- ═══════════════════════════════════════════════════════════════
   SLIDE 05 — Activity Selection — Proof & Implementation
 ══════════════════════════════════════════════════════════════════ -->
-<section data-background-color="#0a0a0f">
+<section data-background-color="#fafaf8">
   <div class="slide-hdr">
     <span class="tag">05</span>
     <h2>Activity Selection — Proof &amp; Implementation</h2>
@@ -348,7 +349,7 @@ print(activity_selection(acts))
 <!-- ═══════════════════════════════════════════════════════════════
   SLIDE 06 — Huffman Coding — Idea
 ══════════════════════════════════════════════════════════════════ -->
-<section data-background-color="#0a0a0f">
+<section data-background-color="#fafaf8">
   <div class="slide-hdr">
     <span class="tag">06</span>
     <h2>Huffman Coding — Idea</h2>
@@ -393,7 +394,7 @@ print(activity_selection(acts))
 <!-- ═══════════════════════════════════════════════════════════════
   SLIDE 07 — Huffman Coding — Algorithm
 ══════════════════════════════════════════════════════════════════ -->
-<section data-background-color="#0a0a0f">
+<section data-background-color="#fafaf8">
   <div class="slide-hdr">
     <span class="tag">07</span>
     <h2>Huffman Coding — Algorithm</h2>
@@ -458,7 +459,7 @@ tree = huffman(freq)</code></pre>
 <!-- ═══════════════════════════════════════════════════════════════
   SLIDE 08 — Fractional Knapsack
 ══════════════════════════════════════════════════════════════════ -->
-<section data-background-color="#0a0a0f">
+<section data-background-color="#fafaf8">
   <div class="slide-hdr">
     <span class="tag">08</span>
     <h2>Fractional Knapsack</h2>
@@ -515,7 +516,7 @@ tree = huffman(freq)</code></pre>
 <!-- ═══════════════════════════════════════════════════════════════
   SLIDE 09 — Job Sequencing with Deadlines
 ══════════════════════════════════════════════════════════════════ -->
-<section data-background-color="#0a0a0f">
+<section data-background-color="#fafaf8">
   <div class="slide-hdr">
     <span class="tag">09</span>
     <h2>Job Sequencing with Deadlines</h2>
@@ -568,7 +569,7 @@ tree = huffman(freq)</code></pre>
 <!-- ═══════════════════════════════════════════════════════════════
   SLIDE 10 — Minimum Number of Coins
 ══════════════════════════════════════════════════════════════════ -->
-<section data-background-color="#0a0a0f">
+<section data-background-color="#fafaf8">
   <div class="slide-hdr">
     <span class="tag">10</span>
     <h2>Minimum Number of Coins</h2>
@@ -613,7 +614,7 @@ tree = huffman(freq)</code></pre>
 <!-- ═══════════════════════════════════════════════════════════════
   SLIDE 11 — Minimum Number of Platforms
 ══════════════════════════════════════════════════════════════════ -->
-<section data-background-color="#0a0a0f">
+<section data-background-color="#fafaf8">
   <div class="slide-hdr">
     <span class="tag">11</span>
     <h2>Minimum Number of Platforms</h2>
@@ -679,7 +680,7 @@ tree = huffman(freq)</code></pre>
 <!-- ═══════════════════════════════════════════════════════════════
   SLIDE 12 — Kruskal's MST
 ══════════════════════════════════════════════════════════════════ -->
-<section data-background-color="#0a0a0f">
+<section data-background-color="#fafaf8">
   <div class="slide-hdr">
     <span class="tag">12</span>
     <h2>Greedy Graph Algorithms — Kruskal's MST</h2>
@@ -725,30 +726,30 @@ tree = huffman(freq)</code></pre>
         <svg viewBox="0 0 320 180" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto">
           <defs>
             <marker id="arr-k" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
-              <path d="M0,0 L0,6 L6,3 z" fill="#4ecb8d"/>
+              <path d="M0,0 L0,6 L6,3 z" fill="#1c815a"/>
             </marker>
           </defs>
           <!-- vertices -->
-          <circle cx="60" cy="30" r="18" fill="#1a1a28" stroke="#f5a623" stroke-width="2"/>
-          <text x="60" y="35" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="12" fill="#f5a623">A</text>
-          <circle cx="200" cy="30" r="18" fill="#1a1a28" stroke="#f5a623" stroke-width="2"/>
-          <text x="200" y="35" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="12" fill="#f5a623">B</text>
-          <circle cx="280" cy="100" r="18" fill="#1a1a28" stroke="#f5a623" stroke-width="2"/>
-          <text x="280" y="105" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="12" fill="#f5a623">C</text>
-          <circle cx="130" cy="150" r="18" fill="#1a1a28" stroke="#f5a623" stroke-width="2"/>
-          <text x="130" y="155" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="12" fill="#f5a623">D</text>
+          <circle cx="60" cy="30" r="18" fill="#e7e7e2" stroke="#bf7d10" stroke-width="2"/>
+          <text x="60" y="35" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="12" fill="#bf7d10">A</text>
+          <circle cx="200" cy="30" r="18" fill="#e7e7e2" stroke="#bf7d10" stroke-width="2"/>
+          <text x="200" y="35" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="12" fill="#bf7d10">B</text>
+          <circle cx="280" cy="100" r="18" fill="#e7e7e2" stroke="#bf7d10" stroke-width="2"/>
+          <text x="280" y="105" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="12" fill="#bf7d10">C</text>
+          <circle cx="130" cy="150" r="18" fill="#e7e7e2" stroke="#bf7d10" stroke-width="2"/>
+          <text x="130" y="155" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="12" fill="#bf7d10">D</text>
           <!-- MST edges (green) -->
-          <line x1="78" y1="30" x2="182" y2="30" stroke="#4ecb8d" stroke-width="2"/>
-          <text x="130" y="22" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="10" fill="#4ecb8d">1</text>
-          <line x1="210" y1="46" x2="268" y2="86" stroke="#4ecb8d" stroke-width="2"/>
-          <text x="248" y="60" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="10" fill="#4ecb8d">2</text>
-          <line x1="148" y1="150" x2="264" y2="108" stroke="#4ecb8d" stroke-width="2"/>
-          <text x="210" y="140" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="10" fill="#4ecb8d">3</text>
+          <line x1="78" y1="30" x2="182" y2="30" stroke="#1c815a" stroke-width="2"/>
+          <text x="130" y="22" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="10" fill="#1c815a">1</text>
+          <line x1="210" y1="46" x2="268" y2="86" stroke="#1c815a" stroke-width="2"/>
+          <text x="248" y="60" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="10" fill="#1c815a">2</text>
+          <line x1="148" y1="150" x2="264" y2="108" stroke="#1c815a" stroke-width="2"/>
+          <text x="210" y="140" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="10" fill="#1c815a">3</text>
           <!-- non-MST edges (muted) -->
-          <line x1="70" y1="46" x2="120" y2="134" stroke="#2a2a3a" stroke-width="1" stroke-dasharray="4"/>
-          <text x="80" y="94" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="9" fill="#8888a8">5</text>
-          <line x1="200" y1="48" x2="142" y2="134" stroke="#2a2a3a" stroke-width="1" stroke-dasharray="4"/>
-          <text x="180" y="94" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="9" fill="#8888a8">4</text>
+          <line x1="70" y1="46" x2="120" y2="134" stroke="#d1d1cb" stroke-width="1" stroke-dasharray="4"/>
+          <text x="80" y="94" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="9" fill="#6a6a63">5</text>
+          <line x1="200" y1="48" x2="142" y2="134" stroke="#d1d1cb" stroke-width="1" stroke-dasharray="4"/>
+          <text x="180" y="94" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="9" fill="#6a6a63">4</text>
         </svg>
       </div>
       <p style="font-size:.48em; color:var(--muted); margin-top:.2em; text-align:center;">Green edges = MST (weight 1+2+3=6). Dashed = rejected.</p>
@@ -759,7 +760,7 @@ tree = huffman(freq)</code></pre>
 <!-- ═══════════════════════════════════════════════════════════════
   SLIDE 13 — Prim's MST
 ══════════════════════════════════════════════════════════════════ -->
-<section data-background-color="#0a0a0f">
+<section data-background-color="#fafaf8">
   <div class="slide-hdr">
     <span class="tag">13</span>
     <h2>Greedy Graph Algorithms — Prim's MST</h2>
@@ -822,7 +823,7 @@ tree = huffman(freq)</code></pre>
 <!-- ═══════════════════════════════════════════════════════════════
   SLIDE 14 — Dijkstra's Shortest Path
 ══════════════════════════════════════════════════════════════════ -->
-<section data-background-color="#0a0a0f">
+<section data-background-color="#fafaf8">
   <div class="slide-hdr">
     <span class="tag">14</span>
     <h2>Dijkstra's Shortest Path</h2>
@@ -884,7 +885,7 @@ tree = huffman(freq)</code></pre>
 <!-- ═══════════════════════════════════════════════════════════════
   SLIDE 15 — Greedy vs Dynamic Programming
 ══════════════════════════════════════════════════════════════════ -->
-<section data-background-color="#0a0a0f">
+<section data-background-color="#fafaf8">
   <div class="slide-hdr">
     <span class="tag">15</span>
     <h2>Greedy vs Dynamic Programming</h2>
@@ -936,7 +937,7 @@ tree = huffman(freq)</code></pre>
 <!-- ═══════════════════════════════════════════════════════════════
   SLIDE 16 — When Greedy Fails
 ══════════════════════════════════════════════════════════════════ -->
-<section data-background-color="#0a0a0f">
+<section data-background-color="#fafaf8">
   <div class="slide-hdr">
     <span class="tag">16</span>
     <h2>When Greedy Fails</h2>
@@ -994,7 +995,7 @@ tree = huffman(freq)</code></pre>
 <!-- ═══════════════════════════════════════════════════════════════
   SLIDE 17 — Exchange Arguments for Proofs
 ══════════════════════════════════════════════════════════════════ -->
-<section data-background-color="#0a0a0f">
+<section data-background-color="#fafaf8">
   <div class="slide-hdr">
     <span class="tag">17</span>
     <h2>Exchange Arguments for Proofs</h2>
@@ -1041,7 +1042,7 @@ tree = huffman(freq)</code></pre>
 <!-- ═══════════════════════════════════════════════════════════════
   SLIDE 18 — Matroid Theory
 ══════════════════════════════════════════════════════════════════ -->
-<section data-background-color="#0a0a0f">
+<section data-background-color="#fafaf8">
   <div class="slide-hdr">
     <span class="tag">18</span>
     <h2>Matroid Theory</h2>
@@ -1085,7 +1086,7 @@ tree = huffman(freq)</code></pre>
 <!-- ═══════════════════════════════════════════════════════════════
   SLIDE 19 — Common Greedy Patterns & Pitfalls
 ══════════════════════════════════════════════════════════════════ -->
-<section data-background-color="#0a0a0f">
+<section data-background-color="#fafaf8">
   <div class="slide-hdr">
     <span class="tag">19</span>
     <h2>Common Greedy Patterns &amp; Pitfalls</h2>
@@ -1138,7 +1139,7 @@ tree = huffman(freq)</code></pre>
 <!-- ═══════════════════════════════════════════════════════════════
   SLIDE 20 — Summary & Further Reading
 ══════════════════════════════════════════════════════════════════ -->
-<section data-background-color="#0a0a0f">
+<section data-background-color="#fafaf8">
   <div class="slide-hdr">
     <span class="tag">20</span>
     <h2>Summary &amp; Further Reading</h2>
